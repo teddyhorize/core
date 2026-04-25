@@ -60,7 +60,23 @@ async def async_unload_entry(hass: HomeAssistant, entry: MyIntegrationConfigEntr
         entry.title,
         entry.entry_id,
     )
-    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+
+    # Personal note: log whether the unload succeeded or failed so I can
+    # quickly spot issues in the log without having to dig into HA internals.
+    if unload_ok:
+        _LOGGER.debug(
+            "Successfully unloaded My Integration entry '%s'",
+            entry.title,
+        )
+    else:
+        _LOGGER.warning(
+            "Failed to fully unload My Integration entry '%s' (%s)",
+            entry.title,
+            entry.entry_id,
+        )
+
+    return unload_ok
 
 
 async def async_reload_entry(hass: HomeAssistant, entry: MyIntegrationConfigEntry) -> None:
