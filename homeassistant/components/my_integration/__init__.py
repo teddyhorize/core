@@ -27,9 +27,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: MyIntegrationConfigEntry
     try:
         await coordinator.async_config_entry_first_refresh()
     except Exception as err:
-        # Log at debug level here since ConfigEntryNotReady will surface the
-        # error to the user via the UI; warning-level felt redundant/noisy.
-        _LOGGER.debug("Failed to connect during setup: %s", err)
+        # Log at warning level so it's easier to spot connection issues in
+        # the logs without having to enable debug mode first.
+        _LOGGER.warning("Failed to connect during setup: %s", err)
         raise ConfigEntryNotReady(
             translation_domain="my_integration",
             translation_key="cannot_connect",
